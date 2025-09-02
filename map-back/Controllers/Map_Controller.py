@@ -24,3 +24,25 @@ def get_crime_data():
 	cur.close()
 	conn.close()
 	return jsonify(data)
+
+@map_controller.route('/api/crime-types', methods=['GET'])
+def get_crime_types():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT id, crime_type FROM t_criminal_activity_type;')
+    rows = cur.fetchall()
+    data = [{'id': row[0], 'crime_type': row[1]} for row in rows]
+    cur.close()
+    conn.close()
+    return jsonify(data)
+
+@map_controller.route('/api/method-types', methods=['GET'])
+def get_method_types():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT id, method_type FROM t_crime_method;')
+    rows = cur.fetchall()
+    data = [{'id': row[0], 'method_type': row[1]} for row in rows]
+    cur.close()
+    conn.close()
+    return jsonify(data)
