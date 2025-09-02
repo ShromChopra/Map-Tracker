@@ -1,44 +1,40 @@
 
 
 import './App.css';
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Login from './Auth_Front/Login';
 import Signup from './Auth_Front/Signup';
+import Dashboard from './Dashboard/Dashboard';
+import LatestNews from './LatestNews/LatestNews';
+import MapLegend from './MapLegend/MapLegend';
 
-function App() {
-  const [page, setPage] = useState('entry');
-
-  const handleBack = () => setPage('entry');
-  const handleHome = () => setPage('entry');
-
-  if (page === 'login') {
-    return (
-      <div>
-        <button onClick={handleHome} style={{ position: 'absolute', top: 10, left: 10 }}>Home</button>
-        <button onClick={handleBack} style={{ position: 'absolute', top: 10, left: 80 }}>Back</button>
-        <Login />
-      </div>
-    );
-  }
-  if (page === 'signup') {
-    return (
-      <div>
-        <button onClick={handleHome} style={{ position: 'absolute', top: 10, left: 10 }}>Home</button>
-        <button onClick={handleBack} style={{ position: 'absolute', top: 10, left: 80 }}>Back</button>
-        <Signup />
-      </div>
-    );
-  }
-
+function EntryPage() {
+  const navigate = useNavigate();
   return (
     <div className="entry-page">
       <h1>Welcome to Map Tracker</h1>
       <div className="entry-actions">
-        <button className="login-btn" onClick={() => setPage('login')}>Login</button>
+        <button className="login-btn" onClick={() => navigate('/login')}>Login</button>
         <span style={{ margin: '0 10px' }}>or</span>
-        <button className="signup-btn" onClick={() => setPage('signup')}>Sign Up</button>
+        <button className="signup-btn" onClick={() => navigate('/signup')}>Sign Up</button>
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<EntryPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/latest-news" element={<LatestNews />} />
+        <Route path="/map-legend" element={<MapLegend />} />
+      </Routes>
+    </Router>
   );
 }
 

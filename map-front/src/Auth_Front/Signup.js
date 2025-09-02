@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function Signup() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [countdown, setCountdown] = useState(3);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +22,8 @@ function Signup() {
       });
       const data = await response.json();
       if (response.ok) {
-        setMessage('User registered successfully!');
+        setShowPopup(true);
+        setCountdown(3);
       } else {
         setMessage(data.error || 'Registration failed');
       }
@@ -28,6 +31,17 @@ function Signup() {
       setMessage('Error connecting to server');
     }
   };
+
+  useEffect(() => {
+    let timer;
+    if (showPopup && countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    } else if (showPopup && countdown === 0) {
+      // Redirect to main page (assuming main page is '/')
+  window.location.href = '/App.js';
+    }
+    return () => clearTimeout(timer);
+  }, [showPopup, countdown]);
 
   return (
     <div className="signup-page">
@@ -39,6 +53,12 @@ function Signup() {
         <button type="submit">Sign Up</button>
       </form>
       {message && <p>{message}</p>}
+      {showPopup && (
+        <div className="signup-popup" style={{position: 'fixed', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', background: '#fff', border: '1px solid #ccc', padding: '2rem', zIndex: 1000}}>
+          <h3>Sign Up Successful!</h3>
+          <p>Redirecting to main page in {countdown} seconds...</p>
+        </div>
+      )}
     </div>
   );
 }
